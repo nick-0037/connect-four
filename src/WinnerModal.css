@@ -1,0 +1,32 @@
+.winner {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.winner .win {
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+}
+
+.win {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.winner .win-color.red {
+  color: #ff4757;
+}
+
+.winner .win-color.yellow {
+  color: #fbc531;
+}

@@ -1,0 +1,34 @@
+.round {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  /**transition: background-color .1s;**/
+}
+
+.round.red {
+  background-color: #ff4757;
+}
+
+.round.yellow {
+  background-color: #fbc531;
+}
+
+/**.falling {
+  animation: fall 1s ease-out;
+}
+
+  @keyframes fall {
+  from {
+    transform: translateY(-48vh);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+} **/
