@@ -43,9 +43,11 @@ h1 {
 
 .board {
   display: flex;
-  margin-top: 25px;
-  flex-direction: column;
+  gap: 20px;
+  margin-top: 70px;
+  flex-direction: row;
   align-items: center;
+  text-align: center;
 }
 
 .board h1 {
@@ -55,7 +57,6 @@ h1 {
 
 .board button {
   padding: 8px 12px;
-  margin: 25px;
   background: transparent;
   border: 2px solid #eee;
   color: #eee;
@@ -71,10 +72,10 @@ h1 {
   color: #222;
 }
 
-/* Estilos del juego */
+/* Styles Game */
 .game {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columnas */
+  grid-template-columns: repeat(7, 1fr);
   grid-gap: 10px;
   margin-top: 20px;
   border: 4px solid #dcdcdc;
@@ -120,11 +121,42 @@ h1 {
   background-color: #b2bec3;
 }
 
-/* Estilos para las fichas */
+/* Style to round */
 .round.red {
   background-color: #ff4757;
 }
 
 .round.yellow {
   background-color: #fbc531;
+}
+
+/* style to creating room */
+
+.creating-room-input {
+  border: none;
+  border-radius: 8px 0 0 8px;
+  padding: 8px;
+  width: 120px;
+}
+
+.container-creating-room {
+  display: flex;
+  flex-direction: row;
+}
+
+.container-creating-room .button {
+  display: flex;
+  gap: 20px;
+}
+
+.container-bts {
+  display: flex;
+  gap: 20px;
+}
+
+.container-join input {
+  border: none;
+  border-radius: 8px 0 0 8px;
+  padding: 8px;
+  width: 140px;
 }

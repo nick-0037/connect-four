@@ -16,7 +16,6 @@ export const Round = ({ color, updatedBoard, index, fallingAnimation }) => {
 
   const handleClick = () => {
     updatedBoard(index)
-
   }
   
   return (
