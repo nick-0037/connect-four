@@ -1,27 +1,28 @@
-import { useEffect , useState } from 'react'
-import '../Round.css'
+import { useEffect, useState } from "react";
+import "../Round.css";
 
-export const Round = ({ color, updatedBoard, index, fallingAnimation }) => {
-
+export const Round = ({
+  color,
+  updatedBoard,
+  index,
+  fallingAnimation,
+  disabled,
+}) => {
   const [falling, setFalling] = useState(false);
 
   useEffect(() => {
-    if (falling) {
-      setFalling(true);
-    } else {
-      setFalling(false);
-    }
-
-  }, [falling])
+    setFalling(!!fallingAnimation);
+  }, [fallingAnimation]);
 
   const handleClick = () => {
-    updatedBoard(index)
-  }
-  
+    if (disabled) return;
+    if (typeof updatedBoard === "function") updatedBoard(index);
+  };
+
   return (
-    <div onClick={handleClick} 
-    className={`round ${color} ${fallingAnimation ? 'falling' : ''}`}
-    >
-    </div>
-  )
-}
+    <div
+      onClick={handleClick}
+      className={`round ${color || ""} ${falling ? "falling" : ""} ${disabled ? "disabled" : ""}`}
+    ></div>
+  );
+};

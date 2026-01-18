@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CreatingRoom() {
-  const [isCreatingRoom, setIsCreatingRoom] = useState(false)
-  const [isJoining, setIsJoining] = useState(false)
-  const [roomCode, setRoomCode] = useState('')
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [roomCode, setRoomCode] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleCreateRoom = () => {
     const code = Math.random().toString(36).slice(2, 8).toUpperCase();
@@ -16,45 +16,52 @@ function CreatingRoom() {
 
   const handleJoinRoom = () => {
     setIsCreatingRoom(false);
-    setIsJoining(true)
+    setIsJoining(true);
   };
 
   const handleSubmitJoin = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    navigate(`/game/${roomCode}`)
-  }
+    navigate(`/game/${roomCode}`);
+  };
 
   const handlePlay = () => {
-    navigate(`/game/${roomCode}`)
-  }
+    sessionStorage.setItem(`creator:${roomCode}`, "true");
+    navigate(`/game/${roomCode}`);
+  };
 
   const copyRoomCode = () => {
     navigator.clipboard.writeText(roomCode).then(() => {
-      alert('Room code copied to clipboard!');
+      alert("Room code copied to clipboard!");
     });
   };
 
   return (
     <div>
-      { isCreatingRoom ? (
-      <div className="container-creating-room">
-        <input className="creating-room-input" type="text"
-        value={roomCode}
-        readOnly
-        />
-        <div className="button">
-          <button type="button" onClick={copyRoomCode}>Copy</button>
-          <button type="button" onClick={handlePlay}>Play</button>
+      {isCreatingRoom ? (
+        <div className="container-creating-room">
+          <input
+            className="creating-room-input"
+            type="text"
+            value={roomCode}
+            readOnly
+          />
+          <div className="container-bts">
+            <button type="button" onClick={copyRoomCode}>
+              Copy
+            </button>
+            <button type="button" onClick={handlePlay}>
+              Play
+            </button>
+          </div>
         </div>
-      </div>
       ) : isJoining ? (
         <form className="container-join" onSubmit={handleSubmitJoin}>
-          <input 
-          type="text"
-          value={roomCode}
-          onChange={(e) => setRoomCode(e.target.value)}
-          placeholder="Enter room code"
+          <input
+            type="text"
+            value={roomCode}
+            onChange={(e) => setRoomCode(e.target.value)}
+            placeholder="Enter room code"
           />
           <button type="submit">Join</button>
         </form>
@@ -65,7 +72,7 @@ function CreatingRoom() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default CreatingRoom
+export default CreatingRoom;
