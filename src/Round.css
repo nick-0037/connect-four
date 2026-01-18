@@ -18,6 +18,11 @@
   background-color: #fbc531;
 }
 
+.round.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 /**.falling {
   animation: fall 1s ease-out;
 }
