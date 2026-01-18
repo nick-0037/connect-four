@@ -28,27 +28,20 @@ function App() {
   
     // Set state ficha in the position
     newBoard[fallIndex] = currentPlayer
-
+    
     // Set index of the ficha in falling and block board
     setFallingIndex(index)
     setIsBoardLocked(true)
     setCurrentPlayer(currentPlayer === 'red' ? 'yellow' : 'red')
-
-
+    
     setTimeout(() => {
       setBoard(newBoard)
       setFallingIndex(null)
       setIsBoardLocked(false)
       
-      const hasWinner = checkWinnerFrom(newBoard, index, currentPlayer)
-      if (hasWinner) {
-        confetti()
-        setWinner(currentPlayer)
-      }
-
     }, 500) // time animation
   }
-
+  
   const resetGame = () => {
     setBoard(Array(42).fill(null))
     setWinner(null)
@@ -64,7 +57,7 @@ function App() {
 
   return (
     <>
-      <main className="board">
+      <main className="main">
         <div>
           <h1>Connect Four</h1>
           <section className="game">
