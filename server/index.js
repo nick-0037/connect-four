@@ -13,11 +13,11 @@ io.on('connection', socket => {
   console.log('Client connected', socket.id)
   socket.on('createRoom', roomCode => {
     console.log('roomCode', roomCode)
-    
     rooms[roomCode] = {
       board: Array(42).fill(null),
       currentPlayer: 'red',
-      winner: null
+      winner: null,
+      started: true
     }
     
     socket.join(roomCode)
@@ -26,13 +26,14 @@ io.on('connection', socket => {
     socket.emit('gameState', rooms[roomCode])
   })
   socket.on('joinRoom', roomCode => {
-    if(rooms[roomCode]) {
+    if (rooms[roomCode]) {
       socket.join(roomCode)
       console.log(`Player joined room: ${roomCode}`)
-      
       socket.emit('gameState', rooms[roomCode])
     } else {
-      socket.emit('Error:', 'Room not found')
+      // Room hasn't been created/started by the host yet
+      console.log(`Player attempted to join non-started room: ${roomCode}`)
+      socket.emit('roomNotStarted', 'Room has not been started by the host')
     }
   })
   
