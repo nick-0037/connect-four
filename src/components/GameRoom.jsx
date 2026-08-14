@@ -10,6 +10,7 @@ function GameRoom() {
   const { roomCode } = useParams(); // to code of room enter by user
   const [gameState, setGameState] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState("red");
+  const [playerColor, setPlayerColor] = useState(null);
 
   const navigate = useNavigate();
   const [roomNotStarted, setRoomNotStarted] = useState(false);
@@ -44,6 +45,10 @@ function GameRoom() {
       setCurrentPlayer(state.currentPlayer);
     });
 
+    socket.on("playerColor", (color) => {
+      setPlayerColor(color);
+    });
+
     socket.on("roomNotStarted", (msg) => {
       console.warn("roomNotStarted:", msg);
       setRoomNotStarted(true);
@@ -58,14 +63,17 @@ function GameRoom() {
   const handleMove = (index) => {
     const activePlayer = gameState?.currentPlayer ?? currentPlayer;
 
-    if (!gameState || !activePlayer || gameState.board[index] || gameState.winner) {
+    if (!gameState || !playerColor || !activePlayer) {
+      return;
+    }
+
+    if (gameState.board[index] || gameState.winner || activePlayer !== playerColor) {
       return;
     }
 
     // send move to server
     socket.emit("makeMove", {
       column: index,
-      player: activePlayer,
       roomCode,
     });
   };
@@ -76,7 +84,12 @@ function GameRoom() {
 
   const winner = gameState ? gameState.winner : null;
   const activePlayer = gameState?.currentPlayer ?? currentPlayer;
-  const turnLabel = activePlayer === "red" ? "Your turn" : "Turn yellow";
+  const turnLabel =
+    playerColor && activePlayer === playerColor
+      ? "Your turn"
+      : activePlayer === "red"
+        ? "Turn red"
+        : "Turn yellow";
 
   const handleBackHome = () => {
     navigate("/home");

@@ -15,6 +15,11 @@ const PORT = Number(process.env.PORT) || 4001
 
 let rooms = {}
 
+const getAvailableColor = room => {
+  const takenColors = new Set(Object.values(room.players || {}))
+  return ['red', 'yellow'].find(color => !takenColors.has(color)) || null
+}
+
 io.on('connection', socket => {
   console.log('Client connected', socket.id)
   socket.on('createRoom', roomCode => {
@@ -23,19 +28,32 @@ io.on('connection', socket => {
       board: Array(42).fill(null),
       currentPlayer: 'red',
       winner: null,
-      started: true
+      started: true,
+      players: {
+        [socket.id]: 'red'
+      }
     }
     
     socket.join(roomCode)
     console.log(`Room created: ${roomCode}`)
-    
+    socket.emit('playerColor', 'red')
     socket.emit('gameState', rooms[roomCode])
   })
   socket.on('joinRoom', roomCode => {
-    if (rooms[roomCode]) {
+    const room = rooms[roomCode]
+    if (room) {
+      const assignedColor = getAvailableColor(room)
+
+      if (!assignedColor) {
+        socket.emit('roomFull', 'Room is full')
+        return
+      }
+
+      room.players[socket.id] = assignedColor
       socket.join(roomCode)
-      console.log(`Player joined room: ${roomCode}`)
-      socket.emit('gameState', rooms[roomCode])
+      console.log(`Player joined room: ${roomCode} as ${assignedColor}`)
+      socket.emit('playerColor', assignedColor)
+      socket.emit('gameState', room)
     } else {
       // Room hasn't been created/started by the host yet
       console.log(`Player attempted to join non-started room: ${roomCode}`)
@@ -43,13 +61,14 @@ io.on('connection', socket => {
     }
   })
   
-  socket.on('makeMove', ({ column, player, roomCode }) => {
+  socket.on('makeMove', ({ column, roomCode }) => {
     const room = rooms[roomCode]
-    if(!room) return
+    if (!room) return
+
+    const player = room.players[socket.id]
+    if (!player || player !== room.currentPlayer || room.winner) return
     
-    if (player !== room.currentPlayer || room.winner) return
-    
-    const  newBoard = [...room.board]
+    const newBoard = [...room.board]
     let fallIndex = column
     
     while(fallIndex + 7 < 42 && newBoard[fallIndex + 7] === null) {
