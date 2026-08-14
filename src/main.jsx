@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import {
   BrowserRouter as Router,
@@ -11,13 +10,11 @@ import GameRoom from "./components/GameRoom.jsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route path="/home" element={<App />} />
-        <Route path="/game/:roomCode" element={<GameRoom />} />
-      </Routes>
-    </Router>
-  </StrictMode>,
+  <Router>
+    <Routes>
+      <Route path="/" element={<Navigate to="/home" replace />} />
+      <Route path="/home" element={<App />} />
+      <Route path="/game/:roomCode" element={<GameRoom />} />
+    </Routes>
+  </Router>,
 );

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import confetti from "canvas-confetti";
 import io from "socket.io-client";
 import { Round } from "./Round.jsx";
 import { WinnerModal } from "./WinnerModal.jsx";
@@ -10,7 +9,7 @@ const socket = io("/");
 function GameRoom() {
   const { roomCode } = useParams(); // to code of room enter by user
   const [gameState, setGameState] = useState(null);
-  const [currentPlayer, setCurrentPlayer] = useState(null);
+  const [currentPlayer, setCurrentPlayer] = useState("red");
 
   const navigate = useNavigate();
   const [roomNotStarted, setRoomNotStarted] = useState(false);
@@ -57,12 +56,16 @@ function GameRoom() {
   }, [roomCode]);
 
   const handleMove = (index) => {
-    if (!gameState || gameState.board[index] || gameState.winner) return;
+    const activePlayer = gameState?.currentPlayer ?? currentPlayer;
+
+    if (!gameState || !activePlayer || gameState.board[index] || gameState.winner) {
+      return;
+    }
 
     // send move to server
     socket.emit("makeMove", {
       column: index,
-      player: currentPlayer,
+      player: activePlayer,
       roomCode,
     });
   };
@@ -72,12 +75,8 @@ function GameRoom() {
   };
 
   const winner = gameState ? gameState.winner : null;
-
-  useEffect(() => {
-    if (winner) {
-      confetti();
-    }
-  }, [winner]);
+  const activePlayer = gameState?.currentPlayer ?? currentPlayer;
+  const turnLabel = activePlayer === "red" ? "Your turn" : "Turn yellow";
 
   const handleBackHome = () => {
     navigate("/home");
@@ -145,8 +144,8 @@ function GameRoom() {
             </div>
 
             <section className="turn">
-              <h2 className={`turn-text ${currentPlayer}`}>Your turn</h2>
-              <Round color={currentPlayer}></Round>
+              <h2 className={`turn-text ${activePlayer}`}>{turnLabel}</h2>
+              <Round color={activePlayer}></Round>
             </section>
           </section>
 
@@ -154,7 +153,7 @@ function GameRoom() {
             <WinnerModal
               resetGame={resetGame}
               winner={winner}
-              color={currentPlayer}
+              color={winner || activePlayer}
             />
           </section>
         </div>

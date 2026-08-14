@@ -6,6 +6,7 @@ import { checkWinnerFrom } from '../src/logic/board.js'
 const app = express()
 const server = http.createServer(app)
 const io = new SocketServer(server)
+const PORT = Number(process.env.PORT) || 4001
 
 let rooms = {}
 
@@ -66,8 +67,9 @@ io.on('connection', socket => {
     
     rooms[roomCode] = {
       board: Array(42).fill(null),
-      currentPlayer: 'yellow',
-      winner: null
+      currentPlayer: 'red',
+      winner: null,
+      started: true
     }
     
     io.to(roomCode).emit('gameState', rooms[roomCode])
@@ -78,6 +80,18 @@ io.on('connection', socket => {
   })
 })
 
-server.listen(4000, () => {
-  console.log('Server running at', 4000)
+server.on('error', error => {
+  if (error.code === 'EADDRINUSE') {
+    console.warn(`Port ${PORT} is busy, retrying with ${PORT + 1}`)
+    server.listen(PORT + 1, () => {
+      console.log('Server running at', PORT + 1)
+    })
+    return
+  }
+
+  throw error
+})
+
+server.listen(PORT, () => {
+  console.log('Server running at', PORT)
 })

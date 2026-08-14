@@ -18,6 +18,7 @@ function App() {
     if(board[index] || isBoardLocked) return
 
     const newBoard = [...board]
+    const playerTurn = currentPlayer
     
     // Found first position null in the board
     let fallIndex = index
@@ -27,12 +28,23 @@ function App() {
     }
   
     // Set state ficha in the position
-    newBoard[fallIndex] = currentPlayer
+    newBoard[fallIndex] = playerTurn
     
     // Set index of the ficha in falling and block board
     setFallingIndex(index)
     setIsBoardLocked(true)
-    setCurrentPlayer(currentPlayer === 'red' ? 'yellow' : 'red')
+
+    const detectedWinner = checkWinnerFrom(newBoard, fallIndex, playerTurn)
+    if (detectedWinner) {
+      setWinner(detectedWinner)
+      setTimeout(() => {
+        setBoard(newBoard)
+        setFallingIndex(null)
+      }, 500)
+      return
+    }
+
+    setCurrentPlayer(playerTurn === 'red' ? 'yellow' : 'red')
     
     setTimeout(() => {
       setBoard(newBoard)
@@ -46,7 +58,7 @@ function App() {
     setBoard(Array(42).fill(null))
     setWinner(null)
     setIsBoardLocked(false)
-    setCurrentPlayer('yellow')
+    setCurrentPlayer('red')
   }
   
   useEffect(() => {
@@ -79,13 +91,15 @@ function App() {
           </section>
 
           <section className="turn">
-            <h2 className={`turn-text ${currentPlayer}`}>Your turn</h2>
+            <h2 className={`turn-text ${currentPlayer}`}>
+              {currentPlayer === 'red' ? 'Your turn' : 'Turn yellow'}
+            </h2>
             <Round color={currentPlayer}>
             </Round>
           </section>
 
           <section>
-            <WinnerModal resetGame={resetGame} winner={winner} color={currentPlayer}/>
+            <WinnerModal resetGame={resetGame} winner={winner} color={winner || currentPlayer} />
           </section>
         </div>
 
