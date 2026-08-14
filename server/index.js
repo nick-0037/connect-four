@@ -87,16 +87,15 @@ io.on('connection', socket => {
   })
   
   socket.on('resetGame', roomCode => {
-    if(!rooms[roomCode]) return
-    
-    rooms[roomCode] = {
-      board: Array(42).fill(null),
-      currentPlayer: 'red',
-      winner: null,
-      started: true
-    }
-    
-    io.to(roomCode).emit('gameState', rooms[roomCode])
+    const room = rooms[roomCode]
+    if(!room) return
+
+    room.board = Array(42).fill(null)
+    room.currentPlayer = 'red'
+    room.winner = null
+    room.started = true
+
+    io.to(roomCode).emit('gameState', room)
   })
   
   socket.on('disconnect', () => {
