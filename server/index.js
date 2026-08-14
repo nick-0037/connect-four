@@ -5,7 +5,12 @@ import { checkWinnerFrom } from '../src/logic/board.js'
 
 const app = express()
 const server = http.createServer(app)
-const io = new SocketServer(server)
+const io = new SocketServer(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+})
 const PORT = Number(process.env.PORT) || 4001
 
 let rooms = {}

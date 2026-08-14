@@ -4,7 +4,7 @@ import { Round } from "./Round.jsx";
 import { WinnerModal } from "./WinnerModal.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 
-const socket = io("/");
+const socket = io(import.meta.env.VITE_SOCKET_URL || "/");
 
 function GameRoom() {
   const { roomCode } = useParams(); // to code of room enter by user
