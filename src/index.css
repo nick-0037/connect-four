@@ -292,28 +292,44 @@ h1 {
 
 .container-join {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 0;
   margin-top: 8px;
+  width: fit-content;
 }
 
 .container-join input {
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px 0 0 10px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-right: none;
+  border-radius: 12px 0 0 12px;
   padding: 10px 12px;
   width: 120px;
+  min-height: 48px;
+  height: 48px;
   background-color: rgba(22, 24, 29, 0.9);
   color: #ffffff;
   caret-color: #ffffff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.container-join button {
+  min-height: 48px;
+  height: 48px;
+  width: 120px;
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
 .container-join input:focus,
 .container-join input:focus-visible {
   outline: none;
   border-color: rgba(255, 255, 255, 0.9);
+  border-right: none;
   box-shadow: none;
 }
 
@@ -348,10 +364,10 @@ h1 {
     flex-direction: column;
     flex-wrap: wrap;
     align-items: center;
+    gap: 12px;
   }
 
   .container-creating-room {
-    gap: 12px;
     width: 100%;
   }
 
